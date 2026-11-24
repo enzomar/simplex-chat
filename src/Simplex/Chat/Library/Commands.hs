@@ -1495,6 +1495,7 @@ processChatCommand vr nm = \case
       liftIO $ setContactCustomData db user ct customData_
     ok user
   APIGetNtfToken -> withUser' $ \_ -> crNtfToken <$> withAgent getNtfToken
+  APISetNtfServers servers -> lift (withAgent' (`setNtfServers` servers)) >> ok_
   APIRegisterToken token mode -> withUser $ \_ ->
     CRNtfTokenStatus <$> withAgent (\a -> registerNtfToken a nm token mode)
   APIVerifyToken token nonce code -> withUser $ \_ -> withAgent (\a -> verifyNtfToken a nm token nonce code) >> ok_
@@ -4922,6 +4923,7 @@ chatCommandP =
       "/_set theme " *> (APISetChatUIThemes <$> chatRefP <*> optional (A.space *> jsonP)),
       "/_set custom #" *> (APISetGroupCustomData <$> A.decimal <*> optional (A.space *> jsonP)),
       "/_set custom @" *> (APISetContactCustomData <$> A.decimal <*> optional (A.space *> jsonP)),
+      "/_ntf servers " *> (APISetNtfServers <$> strP `A.sepBy1` A.space),
       "/_ntf get" $> APIGetNtfToken,
       "/_ntf register " *> (APIRegisterToken <$> strP_ <*> strP),
       "/_ntf verify " *> (APIVerifyToken <$> strP <* A.space <*> strP <* A.space <*> strP),

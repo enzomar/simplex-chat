@@ -373,6 +373,7 @@ data ChatCommand
   | APISetGroupCustomData {groupId :: GroupId, customData :: Maybe CustomData}
   | APISetContactCustomData {contactId :: ContactId, customData :: Maybe CustomData}
   | APIGetNtfToken
+  | APISetNtfServers [NtfServer] -- Pheme: notification servers chosen by the app at start (not persisted)
   | APIRegisterToken DeviceToken NotificationsMode
   | APIVerifyToken DeviceToken C.CbNonce ByteString
   | APICheckToken DeviceToken
